@@ -12,10 +12,11 @@ Custom Error Handling
 
 **Sequelize:** 
 
-- Eager Loading: Making 1 DB call to rule them all (2 at a time)
-- Class and Instance Methods:
-- Many-to-Many Relationships: 
-- 
+Eager Loading
+
+Class and Instance Methods
+Many-to-Many Relationships: 
+
 
 ## Walk through Codebase
 NOTE: The example uses Harry Potter, which I loved as a kid even though we now know that the author is a soggy popsickle stick
@@ -32,7 +33,7 @@ In order for any of this to work, we need to define a connection object, db.
   - We've specified a port of 5432. This is the port that Postgres runs on.
   - The database name is hogwarts
 Sequelize will utilize pg in order to interact specifically with a PostgreSQL database.
-(HOW DID I MAKE THE DB? In my regular terminal, I ran createdb hogwarts)    
+(HOW DID I MAKE THE DB? In my regular terminal, I ran createdb hogwarts. Then, since I have a seed file with objects to add, I can `run npm run seed` to have sequelize generate the table data and save it to my DB)    
     
 2. db > house.js file, student.js file, index.js
 Each house contains a name, points, team colors, and ghost
