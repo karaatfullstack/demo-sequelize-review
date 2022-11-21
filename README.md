@@ -4,21 +4,12 @@
 
 My Rounding Out [Supplimental Slides](https://docs.google.com/presentation/d/1pbAXsmBuILy6pYLvgd4gwDsopSXgIo-OxcBtOUjzkfE/edit#slide=id.p1)
 
-**Express:** 
+** Express: ** 404 Not Found Page and Custom Error Handling
 
-404 Not Found Page
+** Sequelize: ** Eager Loading, Class and Instance Methods, Many-to-Many Relationships
 
-Custom Error Handling
-
-**Sequelize:** 
-
-Eager Loading
-
-Class and Instance Methods
-Many-to-Many Relationships: 
-
-
-## NUMBER 1 - Walk through Codebase
+## Express
+### NUMBER 1 - Walk through Codebase
 NOTE: The example uses Harry Potter, which I loved as a kid even though we now know that the author is a soggy popsickle stick
 1. seed.js file
 We see we have two tables (Student and House)
@@ -55,7 +46,7 @@ We can think of app.js as a book intro - we bring in all the things we need that
 Now, we can run the command `nodemon` and see the message "Castings spells on port 8080"
 
 
-## NUMBER 2 - Checking Tables and Adding Custom 404
+### NUMBER 2 - Checking Tables and Adding Custom 404
 1. Check tables - first in psql server, SELECT * FROM students;
   - Then, go to browser: http://localhost:8080/students (NOTE: if your json isn't pretty, there are extensions [like JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa/related?hl=en)
 2. Now demonstrate routes: http://localhost:8080/students/1 and http://localhost:8080/houses/4
@@ -70,7 +61,7 @@ app.use((req, res) => {
   - We are hitting the houses route and don't have an associated house ID, but are STILL sending a 200 status
   - We need to make sure we're sending back a 400 response if we can't find information for that specific ID
 
-## NUMBER 3 - Changing Routes to Add Custom Error Handling
+### NUMBER 3 - Changing Routes to Add Custom Error Handling
 1. Go to ```routes > houses.js``` and show the code for specific id route (get /:id)
 2. After const house is defined, add a console.log("my house variable: ", house) -> What's defined?
   - It's 'null' -> QUESTION: how can we put in a check for this?
@@ -84,6 +75,7 @@ app.use((req, res) => {
   - Then, we'll want to wrap `else{ } ` around the res.send(house);
 4. ALSO note that by throwing this error, we hit the CATCH statement at the end catch(e) { (use console.log here) }
   - Inside the catch, the next(e) is accepting this error parameter, so if we did have error handling middleware it'd be passed there (it would go look in our app.js file)
+  - next will look for the next route to handle this unless it has a parameter, which it knows need to be redirected to error middleware
   - We don't so Express's default error handler manages this, which is the logging to the screen that we see.
 
 ## NUMBER 4 - Creating Error-Handling Middleware
@@ -99,5 +91,8 @@ app.use((err, req, res, next) => {
 Show that those console, then show how we would actually do it by replacing the second line with this: 
 ```
 // res.send("Hello from middleware!");
-   res.status(500).send(err);
+   const status = err.status || 500;  // lets us pass in other types of errors from other files
+   res.status(status).send(err);
 ```
+
+## Sequelize
