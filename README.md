@@ -76,7 +76,7 @@ app.use((req, res) => {
   - Inside the catch, the next(e) is accepting this error parameter, so if we did have error handling middleware it'd be passed there (it would go look in our app.js file)
   - next will look for the next route to handle this unless it has a parameter, which it knows need to be redirected to error middleware
   - We don't so Express's default error handler manages this, which is the logging to the screen that we see.
-
+----
 ### Number 4 - Creating Error-Handling Middleware
 Regular middleware looks like this: (req, res, next) => { }
   - Only thing we need to add to make it error handling is an err parameter: (err, req, res, next) => { }
@@ -146,7 +146,7 @@ const houses = await House.getEverything();
   - Answer: I didn't declare Student in my house.js:  `const Student = require('./student'); `
 - This gives us our same eagerly loaded list, but offloads some of the work to the DB using class methods
 
-(NOTE: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) } <- )
+NOTE: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) }
 (DOUBLE NOTE: remember that we can't use 'this' with an arrow function -> it won't stay in that scope!)
 Can show that with this in house.js:
 `
