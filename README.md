@@ -61,9 +61,10 @@ Now, we can run the command `nodemon` and see the message "Castings spells on po
 2. Now demonstrate routes: http://localhost:8080/students/1 and http://localhost:8080/houses/4
 3. What if I just want to hit port 8080? -> ERROR! That's embarrasing. Cat sits on computer -> /sguidphgpaug -> also error!
   - In app.js, can add a custom URL response - put at bottom of others
- ``` app.use((req, res) => {
-        res.status(404).send("Uh oh SpaghettiOs")
-    });
+ ``` 
+app.use((req, res) => {
+    res.status(404).send("Uh oh SpaghettiOs")
+});
 ```    
 4. That looks great! But what about /houses/dgdug? -> Not great!
   - We are hitting the houses route and don't have an associated house ID, but are STILL sending a 200 status
@@ -72,4 +73,31 @@ Now, we can run the command `nodemon` and see the message "Castings spells on po
 ## NUMBER 3 - Changing Routes to Add Custom Error Handling
 1. Go to ```routes > houses.js``` and show the code for specific id route (get /:id)
 2. After const house is defined, add a console.log("my house variable: ", house) -> What's defined?
-  - It's 'null' -> how can we put in a check for this?
+  - It's 'null' -> QUESTION: how can we put in a check for this?
+  - With something like this: ```
+ if(house === null) {
+        throw new Error("that's not a house!");
+    } ```
+3. Error is an object built into JS. We could also do it in two lines to get rid of the rest of the message ```
+  let err = new Error("that's not a house!");
+   throw err.message; ```  // uses the Error prototype and throws only the message portion, no line numbers
+  - Then, we'll want to wrap `else{ } ` around the res.send(house);
+4. ALSO note that by throwing this error, we hit the CATCH statement at the end catch(e) { (use console.log here) }
+  - Inside the catch, the next(e) is accepting this error parameter, so if we did have error handling middleware it'd be passed there (it would go look in our app.js file)
+  - We don't so Express's default error handler manages this, which is the logging to the screen that we see.
+
+## NUMBER 4 - Creating Error-Handling Middleware
+Regular middleware looks like this: (req, res, next) => { }
+  - Only thing we need to add to make it error handling is an err parameter: (err, req, res, next) => { }
+  - In our ```app.js``` we are going to create an error handling middleware
+```
+app.use((err, req, res, next) => {
+        console.log("I'm the new error middleware!", err);
+        res.send("Hello from middleware!");
+    })
+```
+Show that those console, then show how we would actually do it by replacing the second line with this: 
+```
+// res.send("Hello from middleware!");
+   res.status(500).send(err);
+```
