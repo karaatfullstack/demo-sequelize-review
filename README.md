@@ -18,7 +18,7 @@ Class and Instance Methods
 Many-to-Many Relationships: 
 
 
-## Walk through Codebase
+## NUMBER 1 - Walk through Codebase
 NOTE: The example uses Harry Potter, which I loved as a kid even though we now know that the author is a soggy popsickle stick
 1. seed.js file
 We see we have two tables (Student and House)
@@ -55,7 +55,7 @@ We can think of app.js as a book intro - we bring in all the things we need that
 Now, we can run the command `nodemon` and see the message "Castings spells on port 8080"
 
 
-## Starting App and Checking Tables
+## NUMBER 2 - Checking Tables and Adding Custom 404
 1. Check tables - first in psql server, SELECT * FROM students;
   - Then, go to browser: http://localhost:8080/students (NOTE: if your json isn't pretty, there are extensions [like JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa/related?hl=en)
 2. Now demonstrate routes: http://localhost:8080/students/1 and http://localhost:8080/houses/4
@@ -68,3 +68,8 @@ Now, we can run the command `nodemon` and see the message "Castings spells on po
 4. That looks great! But what about /houses/dgdug? -> Not great!
   - We are hitting the houses route and don't have an associated house ID, but are STILL sending a 200 status
   - We need to make sure we're sending back a 400 response if we can't find information for that specific ID
+
+## NUMBER 3 - Changing Routes to Add Custom Error Handling
+1. Go to ```routes > houses.js``` and show the code for specific id route (get /:id)
+2. After const house is defined, add a console.log("my house variable: ", house) -> What's defined?
+  - It's 'null' -> how can we put in a check for this?
