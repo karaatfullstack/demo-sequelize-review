@@ -1,15 +1,15 @@
 # demo-sequelize-review
 ## Day 10 - Rounding Out and Pre-Pillars review
-### What we’re covering
 
 My Rounding Out [Supplimental Slides](https://docs.google.com/presentation/d/1pbAXsmBuILy6pYLvgd4gwDsopSXgIo-OxcBtOUjzkfE/edit#slide=id.p1)
+My [Demo Code](https://github.com/karaatfullstack/Day-10-Rounding-Out-Demo) 
 
-** Express: ** 404 Not Found Page and Custom Error Handling
+**Express:** 404 Not Found Page and Custom Error Handling
 
-** Sequelize: ** Eager Loading, Class and Instance Methods, Many-to-Many Relationships
+**Sequelize:** Eager Loading, Class and Instance Methods, Many-to-Many Relationships
 
-## Express
-### NUMBER 1 - Walk through Codebase
+## EXPRESS
+### Number 1 - Walk through Codebase
 NOTE: The example uses Harry Potter, which I loved as a kid even though we now know that the author is a soggy popsickle stick
 1. seed.js file
 We see we have two tables (Student and House)
@@ -46,53 +46,65 @@ We can think of app.js as a book intro - we bring in all the things we need that
 Now, we can run the command `nodemon` and see the message "Castings spells on port 8080"
 
 
-### NUMBER 2 - Checking Tables and Adding Custom 404
+### Number 2 - Checking Tables and Adding Custom 404
 1. Check tables - first in psql server, SELECT * FROM students;
   - Then, go to browser: http://localhost:8080/students (NOTE: if your json isn't pretty, there are extensions [like JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa/related?hl=en)
 2. Now demonstrate routes: http://localhost:8080/students/1 and http://localhost:8080/houses/4
 3. What if I just want to hit port 8080? -> ERROR! That's embarrasing. Cat sits on computer -> /sguidphgpaug -> also error!
   - In app.js, can add a custom URL response - put at bottom of others
- ``` 
+ `
 app.use((req, res) => {
     res.status(404).send("Uh oh SpaghettiOs")
 });
-```    
+`    
 4. That looks great! But what about /houses/dgdug? -> Not great!
   - We are hitting the houses route and don't have an associated house ID, but are STILL sending a 200 status
   - We need to make sure we're sending back a 400 response if we can't find information for that specific ID
 
-### NUMBER 3 - Changing Routes to Add Custom Error Handling
-1. Go to ```routes > houses.js``` and show the code for specific id route (get /:id)
+### Number 3 - Changing Routes to Add Custom Error Handling
+1. Go to `routes > houses.js` and show the code for specific id route (get /:id)
 2. After const house is defined, add a console.log("my house variable: ", house) -> What's defined?
   - It's 'null' -> QUESTION: how can we put in a check for this?
-  - With something like this: ```
+  - With something like this: `
  if(house === null) {
         throw new Error("that's not a house!");
-    } ```
-3. Error is an object built into JS. We could also do it in two lines to get rid of the rest of the message ```
+    } `
+3. Error is an object built into JS. We could also do it in two lines to get rid of the rest of the message `
   let err = new Error("that's not a house!");
-   throw err.message; ```  // uses the Error prototype and throws only the message portion, no line numbers
+   throw err.message; `  // uses the Error prototype and throws only the message portion, no line numbers
   - Then, we'll want to wrap `else{ } ` around the res.send(house);
 4. ALSO note that by throwing this error, we hit the CATCH statement at the end catch(e) { (use console.log here) }
   - Inside the catch, the next(e) is accepting this error parameter, so if we did have error handling middleware it'd be passed there (it would go look in our app.js file)
   - next will look for the next route to handle this unless it has a parameter, which it knows need to be redirected to error middleware
   - We don't so Express's default error handler manages this, which is the logging to the screen that we see.
 
-## NUMBER 4 - Creating Error-Handling Middleware
+### Number 4 - Creating Error-Handling Middleware
 Regular middleware looks like this: (req, res, next) => { }
   - Only thing we need to add to make it error handling is an err parameter: (err, req, res, next) => { }
-  - In our ```app.js``` we are going to create an error handling middleware
-```
+  - In our `app.js` we are going to create an error handling middleware
+`
 app.use((err, req, res, next) => {
         console.log("I'm the new error middleware!", err);
         res.send("Hello from middleware!");
     })
-```
+`
 Show that those console, then show how we would actually do it by replacing the second line with this: 
-```
+`
 // res.send("Hello from middleware!");
    const status = err.status || 500;  // lets us pass in other types of errors from other files
    res.status(status).send(err);
-```
+`
 
-## Sequelize
+## SEQUELIZE
+### Number 1 - Eager Loading
+Right now, when we hit `localhost:8080/students/1` we will only get back Harry Potter - but I want that info plus his house
+  - Go into routes > students.js -> type `const studentHouse = ` into the get/:id portion -> How could we get this info?
+    One possibility - await Student.getHouse();
+    console.log(studentHouse)
+This works, but can anyone tell me what isn't ideal about this? (We made 2 DB calls! Only want 1!)
+  - Eager loading says "if I have any associations, I want those instances as well!"
+  - What kind of JOIN does this souond like? All student info, and some house info? (A left join!)
+` const student = await Student.findByPk( req.params.id, { include: House } );`
+  - This means on line 2 I also need to include House  (const {Student, House} = require('../db');
+  - First argument is the ID I need to reference by, and the second parameter tells us which table we're joining/ model we're including 
+
