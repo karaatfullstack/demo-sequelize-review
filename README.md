@@ -1,5 +1,4 @@
-# demo-sequelize-review
-## Day 10 - Rounding Out and Pre-Pillars review
+# Day 10 - Rounding Out and Pre-Pillars review
 
 My Rounding Out [Supplimental Slides](https://docs.google.com/presentation/d/1pbAXsmBuILy6pYLvgd4gwDsopSXgIo-OxcBtOUjzkfE/edit#slide=id.p1)
 My [Demo Code](https://github.com/karaatfullstack/Day-10-Rounding-Out-Demo) 
@@ -146,6 +145,7 @@ const houses = await House.getEverything();
   - Answer: I didn't declare Student in my house.js:  `const Student = require('./student'); `
 - This gives us our same eagerly loaded list, but offloads some of the work to the DB using class methods
 
+--
 (NOTE: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) } <- )
 (DOUBLE NOTE: remember that we can't use 'this' with an arrow function -> it won't stay in that scope!)
 Can show that with this in house.js:
@@ -161,3 +161,15 @@ const colorStatement = house.colorScheme();
 res.send(colorStatement);
 `
 Doing http://localhost:8080/houses/3 will return "Ravenclaw's colors are blue and bronze". Cool!
+--
+### Number 3 - Many to Many
+1. We have these built-in methods for one-to-many: House.hasMany(Student) and Student.belongsTo(House)
+- these are instance methods
+- If we want to see ALL the methods we can use, we can do:
+ ` console.log( "House can use ", Object.keys(House.prototype) ); `
+2. Now let's say we have a many-to-many relationship (think journal entries and tags, each can have 1+)
+- QUESTION: How did we do this in that case? ANSWER: We used the join table to hold keys
+3. In index.js, take out the other relations and write this
+` House.belongsToMany( Student, { through: 'house-student' } );
+  Student.belongsToMany( House, { through: 'house-student' } ); `
+  - Now we can log those same statements again - we'll see houses still have the same methods as before, and students have gained the additional ones
