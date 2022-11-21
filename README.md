@@ -18,18 +18,26 @@ Custom Error Handling
 - 
 
 ## Walk through Codebase
-NOTE: The example uses Harry Potter, which I loved as a kid even though we now know that the author is a soggy popsickle stick/ snollygoster
+NOTE: The example uses Harry Potter, which I loved as a kid even though we now know that the author is a soggy popsickle stick
 1. seed.js file
 We see we have two tables (Student and House)
   - Students each having a name, pet, and houseID
   - House table has many students in each
-  - QUESTION: How do we write that relation in Sequelize? 
+  - QUESTION: How do we write that relation in Sequelize?   
     Answer: House.hasMany(Student) and Student.belongsTo(House) <- will have FK
+In order for any of this to work, we need to define a connection object, db.
+- In `database.js ` - We initialize the DB connection object with the URL for the database to connect to. OF NOTE:
+  - It uses the postgres protocol, rather than http
+  - The host is localhost. In a production app, the DB will most likely be hosted on a different server
+  - We've specified a port of 5432. This is the port that Postgres runs on.
+  - The database name is hogwarts
+Sequelize will utilize pg in order to interact specifically with a PostgreSQL database.
+(HOW DID I MAKE THE DB? In my regular terminal, I ran createdb hogwarts)    
     
 2. db > house.js file, student.js file, index.js
 Each house contains a name, points, team colors, and ghost
 Show students.js file 
-  -> We DONT need to add a FK here, the association is in the `db > index.js`
+ -> We DONT need to add a FK here, the association is in the `db > index.js`
   - Also have access to what? Additional methods come with that as well.
   - We see we can export at the bottom, which gives us access in our Routes
 
@@ -43,4 +51,5 @@ The setup function establishes the use of Morgan for logging and the Routes
 We can think of app.js as a book intro - we bring in all the things we need that aren't specific to our code, like publishing information (logging) and create a table of contents to all the chapters of our code
 - The app.use() function is used to mount the specified middleware function(s) at the specified path ( app.use(path, callback) )
 - We then sync the DB (before listening to the port)
-- 
+Now, we can run the command `nodemon` and see the message "Castings spells on port 8080"
+
