@@ -146,6 +146,7 @@ const houses = await House.getEverything();
 - This gives us our same eagerly loaded list, but offloads some of the work to the DB using class methods
 
 --
+
 (NOTE: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) } <- )
 (DOUBLE NOTE: remember that we can't use 'this' with an arrow function -> it won't stay in that scope!)
 Can show that with this in house.js:
