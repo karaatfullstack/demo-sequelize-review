@@ -110,7 +110,30 @@ Show that those console, then show how we would actually do it by replacing the 
 NOTE: If I want specific info from the House (not all), I can pick which attributes like this
 `     const student = await Student.findByPk( req.params.id, { include: {model: House, attributes: ['name', 'ghost'] }} ); `
 3. If I go into houses.js, in the get/ section with findAll, I can change the empty () to add an object:
-`  const houses = await House.findAll( {
+`  
+const houses = await House.findAll( {
         include: Student
-    } ); `
-### Number 2 - 
+} ); 
+` // And on line 2 add "Student" to the require statement -> gives us student array for each house
+  - Houses have MANY students, which is why we have an array of student objects returned (Whereas students have ONE house - that returned an object)
+### Number 2 - Class and Instance Methods
+1. Go into the `routes > houses.js` - right now we have findAll 
+- We want to keep routes teeny and models hearty, so we will add what we can to our Sequelize models rather than in the JS
+- In ` db > house.js`, console.log(House) -> Returns house
+  - `typeof House` -> function
+  - console.log( typeof House() ); -> error which tells us our models are just *constructor functions*
+- Use this to our advantage to utilize Class and Instance syntax
+2. Take that entire section in our routes > houses.js:
+`
+const houses = await House.findAll( {
+        include: Student
+    } );
+    `
+and place it into our db > house.js
+- We can make a class method to put this code inside of so ALL instances have this function
+` 
+House.getEverything = async function() {
+    // PASTE THAT CODE HERE
+    return houses
+}
+`
