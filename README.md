@@ -144,8 +144,8 @@ const houses = await House.getEverything();
 - Now, if we fun this in the browser, we will get an error - can anyone tell me what I forgot?
   - Answer: I didn't declare Student in my house.js:  `const Student = require('./student'); `
 - This gives us our same eagerly loaded list, but offloads some of the work to the DB using class methods
-
 --
+
 
 (NOTE: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) } <- )
 (DOUBLE NOTE: remember that we can't use 'this' with an arrow function -> it won't stay in that scope!)
