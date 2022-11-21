@@ -148,7 +148,9 @@ const houses = await House.getEverything();
   - Note: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) }
   - Double Note: remember that we can't use 'this' with an arrow function -> it won't stay in that scope!
 
+
 Can show that with this in house.js:
+
 `
 House.prototype.colorScheme = function() { 
   console.log("what's this? ", this);
@@ -156,10 +158,12 @@ House.prototype.colorScheme = function() {
 } 
 `
 And this in houses.js inside of the get/:id (one house only for instance):
+
 `
 const colorStatement = house.colorScheme();
 res.send(colorStatement);
 `
+
 Doing http://localhost:8080/houses/3 will return "Ravenclaw's colors are blue and bronze". Cool!
 
 ----
