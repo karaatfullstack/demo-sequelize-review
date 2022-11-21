@@ -54,3 +54,17 @@ We can think of app.js as a book intro - we bring in all the things we need that
 - We then sync the DB (before listening to the port)
 Now, we can run the command `nodemon` and see the message "Castings spells on port 8080"
 
+
+## Starting App and Checking Tables
+1. Check tables - first in psql server, SELECT * FROM students;
+  - Then, go to browser: http://localhost:8080/students (NOTE: if your json isn't pretty, there are extensions [like JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa/related?hl=en)
+2. Now demonstrate routes: http://localhost:8080/students/1 and http://localhost:8080/houses/4
+3. What if I just want to hit port 8080? -> ERROR! That's embarrasing. Cat sits on computer -> /sguidphgpaug -> also error!
+  - In app.js, can add a custom URL response - put at bottom of others
+ ``` app.use((req, res) => {
+        res.status(404).send("Uh oh SpaghettiOs")
+    });
+```    
+4. That looks great! But what about /houses/dgdug? -> Not great!
+  - We are hitting the houses route and don't have an associated house ID, but are STILL sending a 200 status
+  - We need to make sure we're sending back a 400 response if we can't find information for that specific ID
