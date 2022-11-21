@@ -97,14 +97,20 @@ Show that those console, then show how we would actually do it by replacing the 
 
 ## SEQUELIZE
 ### Number 1 - Eager Loading
-Right now, when we hit `localhost:8080/students/1` we will only get back Harry Potter - but I want that info plus his house
+1. Right now, when we hit `localhost:8080/students/1` we will only get back Harry Potter - but I want that info plus his house
   - Go into routes > students.js -> type `const studentHouse = ` into the get/:id portion -> How could we get this info?
     One possibility - await Student.getHouse();
     console.log(studentHouse)
-This works, but can anyone tell me what isn't ideal about this? (We made 2 DB calls! Only want 1!)
+2. This works, but can anyone tell me what isn't ideal about this? (We made 2 DB calls! Only want 1!)
   - Eager loading says "if I have any associations, I want those instances as well!"
   - What kind of JOIN does this souond like? All student info, and some house info? (A left join!)
 ` const student = await Student.findByPk( req.params.id, { include: House } );`
   - This means on line 2 I also need to include House  (const {Student, House} = require('../db');
   - First argument is the ID I need to reference by, and the second parameter tells us which table we're joining/ model we're including 
-
+NOTE: If I want specific info from the House (not all), I can pick which attributes like this
+`     const student = await Student.findByPk( req.params.id, { include: {model: House, attributes: ['name', 'ghost'] }} ); `
+3. If I go into houses.js, in the get/ section with findAll, I can change the empty () to add an object:
+`  const houses = await House.findAll( {
+        include: Student
+    } ); `
+### Number 2 - 
