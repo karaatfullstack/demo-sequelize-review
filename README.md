@@ -44,7 +44,7 @@ We can think of app.js as a book intro - we bring in all the things we need that
 - We then sync the DB (before listening to the port)
 Now, we can run the command `nodemon` and see the message "Castings spells on port 8080"
 
-
+----
 ### Number 2 - Checking Tables and Adding Custom 404
 1. Check tables - first in psql server, SELECT * FROM students;
   - Then, go to browser: http://localhost:8080/students (NOTE: if your json isn't pretty, there are extensions [like JSON Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa/related?hl=en)
@@ -59,7 +59,7 @@ app.use((req, res) => {
 4. That looks great! But what about /houses/dgdug? -> Not great!
   - We are hitting the houses route and don't have an associated house ID, but are STILL sending a 200 status
   - We need to make sure we're sending back a 400 response if we can't find information for that specific ID
-
+----
 ### Number 3 - Changing Routes to Add Custom Error Handling
 1. Go to `routes > houses.js` and show the code for specific id route (get /:id)
 2. After const house is defined, add a console.log("my house variable: ", house) -> What's defined?
@@ -115,6 +115,7 @@ const houses = await House.findAll( {
 } ); 
 ` // And on line 2 add "Student" to the require statement -> gives us student array for each house
   - Houses have MANY students, which is why we have an array of student objects returned (Whereas students have ONE house - that returned an object)
+----
 ### Number 2 - Class and Instance Methods
 1. Go into the `routes > houses.js` - right now we have findAll 
 - We want to keep routes teeny and models hearty, so we will add what we can to our Sequelize models rather than in the JS
@@ -144,8 +145,6 @@ const houses = await House.getEverything();
 - Now, if we fun this in the browser, we will get an error - can anyone tell me what I forgot?
   - Answer: I didn't declare Student in my house.js:  `const Student = require('./student'); `
 - This gives us our same eagerly loaded list, but offloads some of the work to the DB using class methods
---
-
 
 (NOTE: instances would be on the prototype -> House.prototype.colorScheme = function() { console.log("what's this? ", this) } <- )
 (DOUBLE NOTE: remember that we can't use 'this' with an arrow function -> it won't stay in that scope!)
@@ -162,7 +161,7 @@ const colorStatement = house.colorScheme();
 res.send(colorStatement);
 `
 Doing http://localhost:8080/houses/3 will return "Ravenclaw's colors are blue and bronze". Cool!
---
+----
 ### Number 3 - Many to Many
 1. We have these built-in methods for one-to-many: House.hasMany(Student) and Student.belongsTo(House)
 - these are instance methods
